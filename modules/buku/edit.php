@@ -106,9 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // Jika tidak ada error, update database
     if (count($errors) == 0) {
-        $stmt = $conn->prepare("UPDATE buku SET kode_buku = ?, judul = ?, id_kategori = ?, id_pengarang = ?, penerbit = ?, tahun_terbit = ?, isbn = ?, harga = ?, stok = ?, deskripsi = ? WHERE id_buku = ?");
+        $stmt = $conn->prepare("UPDATE buku SET kode_buku = ?, judul = ?, id_kategori = ?, pengarang = ?, id_penerbit = ?, tahun_terbit = ?, isbn = ?, harga = ?, stok = ?, deskripsi = ? WHERE id_buku = ?");
+        if (!$stmt) {
+            $errors[] = "Prepare failed: " . $conn->error;
+        } else {
         
-        $stmt->bind_param("sssssisdisi", 
+        $stmt->bind_param("ssisiisdsi", 
             $kode_buku,
             $judul,
             $kategori,
@@ -132,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         
         $stmt->close();
+        }
     }
 }
 ?>
